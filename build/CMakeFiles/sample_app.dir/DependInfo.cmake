@@ -5,7 +5,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/bill/Documents/libyue/sample_app/main.cc" "/home/bill/Documents/libyue/build/CMakeFiles/sample_app.dir/sample_app/main.cc.o"
-  "/home/bill/Documents/libyue/src/radar_view.cpp" "/home/bill/Documents/libyue/build/CMakeFiles/sample_app.dir/src/radar_view.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -1324,16 +1324,6 @@ nativeui/gfx/color.h
 nativeui/gfx/geometry/rect_f.h
 ../include/nativeui/nativeui/gfx/geometry/rect_f.h
 
-../include/radar_view.h
-string
--
-iostream
--
-unordered_map
--
-nativeui/nativeui.h
-../include/nativeui/nativeui.h
-
 ../include/testing/gtest/include/gtest/gtest_prod.h
 third_party/googletest/src/googletest/include/gtest/gtest_prod.h
 ../include/testing/gtest/include/gtest/third_party/googletest/src/googletest/include/gtest/gtest_prod.h
@@ -1501,14 +1491,6 @@ observable/detail/type_traits.hpp
 -
 
 /home/bill/Documents/libyue/sample_app/main.cc
-base/command_line.h
-/home/bill/Documents/libyue/sample_app/base/command_line.h
-nativeui/nativeui.h
-/home/bill/Documents/libyue/sample_app/nativeui/nativeui.h
-radar_view.h
-/home/bill/Documents/libyue/sample_app/radar_view.h
-
-/home/bill/Documents/libyue/src/radar_view.cpp
 iostream
 -
 cmath
@@ -1521,10 +1503,10 @@ ctime
 -
 cstddef
 -
-radar_view.h
-/home/bill/Documents/libyue/src/radar_view.h
+base/command_line.h
+/home/bill/Documents/libyue/sample_app/base/command_line.h
 nativeui/nativeui.h
-/home/bill/Documents/libyue/src/nativeui/nativeui.h
+/home/bill/Documents/libyue/sample_app/nativeui/nativeui.h
 observable/observable.hpp
 -
 

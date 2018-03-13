@@ -1,5 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/sample_app.dir/src/radar_view.cpp.o"
   "CMakeFiles/sample_app.dir/sample_app/main.cc.o"
   "sample_app.pdb"
   "sample_app"

@@ -150,33 +150,6 @@ sample_app/main.cc.s:
 	$(MAKE) -f CMakeFiles/sample_app.dir/build.make CMakeFiles/sample_app.dir/sample_app/main.cc.s
 .PHONY : sample_app/main.cc.s
 
-src/radar_view.o: src/radar_view.cpp.o
-
-.PHONY : src/radar_view.o
-
-# target to build an object file
-src/radar_view.cpp.o:
-	$(MAKE) -f CMakeFiles/sample_app.dir/build.make CMakeFiles/sample_app.dir/src/radar_view.cpp.o
-.PHONY : src/radar_view.cpp.o
-
-src/radar_view.i: src/radar_view.cpp.i
-
-.PHONY : src/radar_view.i
-
-# target to preprocess a source file
-src/radar_view.cpp.i:
-	$(MAKE) -f CMakeFiles/sample_app.dir/build.make CMakeFiles/sample_app.dir/src/radar_view.cpp.i
-.PHONY : src/radar_view.cpp.i
-
-src/radar_view.s: src/radar_view.cpp.s
-
-.PHONY : src/radar_view.s
-
-# target to generate assembly for a file
-src/radar_view.cpp.s:
-	$(MAKE) -f CMakeFiles/sample_app.dir/build.make CMakeFiles/sample_app.dir/src/radar_view.cpp.s
-.PHONY : src/radar_view.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -189,9 +162,6 @@ help:
 	@echo "... sample_app/main.o"
 	@echo "... sample_app/main.i"
 	@echo "... sample_app/main.s"
-	@echo "... src/radar_view.o"
-	@echo "... src/radar_view.i"
-	@echo "... src/radar_view.s"
 .PHONY : help
 
 

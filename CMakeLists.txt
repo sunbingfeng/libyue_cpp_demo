@@ -13,7 +13,7 @@ project(YueSampleApp)
 set(APP_NAME "sample_app")
 
 # The main executable.
-add_executable(${APP_NAME} src/radar_view.cpp ${APP_NAME}/main.cc)
+add_executable(${APP_NAME} ${APP_NAME}/main.cc)
 
 # Get the absolute path the libyue.
 get_filename_component(LIBYUE_DIR "${CMAKE_SOURCE_DIR}" ABSOLUTE)

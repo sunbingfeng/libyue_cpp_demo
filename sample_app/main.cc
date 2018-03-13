@@ -19,24 +19,15 @@ struct ObjectInfo_77{
     int8_t ID;
     float Range;
     float RadialVelocity;
-    int8_t Amplitude;
-    int8_t Azimuth;
+    float Amplitude;
+    float Azimuth;
 };
 
 
 struct SonarData
 {
-    unsigned short left_front;
-    unsigned short right_front;
-
-    unsigned short leftside_front;
-    unsigned short rightside_front;
-
-    unsigned short leftside_rear;
-    unsigned short rightside_rear;
-
-    unsigned short left_rear;
-    unsigned short right_rear;
+    float left;
+    float right;
 };
 
 const static float pi = 3.1415926;
@@ -93,7 +84,7 @@ private:
       objects_t front, rear;
       for (int i = 0; i < cnt; ++i)
       {
-          float Range = 0.1 * (std::rand() % 2000);  // cm
+          float Range = 0.1f * (std::rand() % 2000);  // cm
           float Azimuth = ((std::rand() % 180) - 90) * pi / 180;        
           front.push_back(ObjectInfo_77({0,Range,0.0f,0,Azimuth}));
       }
@@ -102,21 +93,15 @@ private:
       cnt = std::rand() % 10;
       for (int i = 0; i < cnt; ++i)
       {
-          float Range = 0.1 * (std::rand() % 2000);  // cm
+          float Range = 0.1f * (std::rand() % 2000);  // cm
           float Azimuth = ((std::rand() % 180) - 90) * pi / 180;        
           rear.push_back(ObjectInfo_77({0,Range,0.0f,0,Azimuth}));
       }
       m_objs_map[1] = rear;
       
       m_sonar = {
-        0.1 * (std::rand() % 2000),
-        0.1 * (std::rand() % 2000),
-        0.1 * (std::rand() % 2000),
-        0.1 * (std::rand() % 2000),
-        0.1 * (std::rand() % 2000),
-        0.1 * (std::rand() % 2000),
-        0.1 * (std::rand() % 2000),
-        0.1 * (std::rand() % 2000)
+        0.1f * (std::rand() % 2000),
+        0.1f * (std::rand() % 2000)
       };
 
       _toggle = !_toggle;
@@ -127,24 +112,6 @@ private:
     }
   }
 };
-
-
-void drawLine(nu::Painter *painter) {
-  painter->Save();
-
-  painter->SetStrokeColor(nu::Color("#550000"));
-  painter->SetFillColor(nu::Color("#D46A6A"));
-  painter->SetLineWidth(20);
-  painter->BeginPath();
-  painter->MoveTo(nu::PointF(25, 25));
-  painter->LineTo(nu::PointF(105, 25));
-  // painter->LineTo(nu::PointF(25, 105));
-  painter->ClosePath();
-  painter->Stroke();
-
-  painter->Restore();
-}
-
 
 void drawSonarArc(nu::Painter *painter, nu::PointF center, float radius, float sa, float ea)
 {
@@ -171,19 +138,6 @@ void drawRadarObstacle(nu::Painter *painter, nu::PointF center, float radius)
 }
 
 
-
-void drawRadarRange(nu::Painter *painter)
-{
-  painter->SetStrokeColor(nu::Color("#E92117"));
-
-  painter->BeginPath();
-  painter->Arc(nu::PointF(center_x, center_y - height / 2), 300/unit, pi, 2*pi);  // 3m range
-  painter->Arc(nu::PointF(center_x, center_y - height / 2), 500/unit, pi, 2*pi);  // 5m range
-  painter->ClosePath();
-
-  painter->Stroke();
-}
-
 void drawCar(nu::Painter *painter)
 {
   painter->SetStrokeColor(nu::Color("#000000"));
@@ -200,21 +154,11 @@ void updateSonarArc(nu::Painter *painter, TestModel *model)
   static const float rearsonar_space = 44 / unit; // 44 cm
   static const float sidesonar_space = 125 / unit; // 125 cm
 
-  // front sonar
-  drawSonarArc(painter, nu::PointF(center_x - frontsonar_space/2, center_y - height/2), model->m_sonar.left_front/unit, 3*pi/2 - sonar_angle_range/2, 3*pi/2 + sonar_angle_range/2);
-  drawSonarArc(painter, nu::PointF(center_x + frontsonar_space/2, center_y - height/2), model->m_sonar.right_front/unit, 3*pi/2 - sonar_angle_range/2, 3*pi/2 + sonar_angle_range/2);
+  // left sonar
+  drawSonarArc(painter, nu::PointF(center_x - width/2, center_y), model->m_sonar.left/unit, pi - sonar_angle_range/2, pi + sonar_angle_range/2);
 
-  // rear sonar
-  drawSonarArc(painter, nu::PointF(center_x - frontsonar_space/2, center_y + height/2), model->m_sonar.left_rear/unit, pi/2 - sonar_angle_range/2, pi/2 + sonar_angle_range/2);
-  drawSonarArc(painter, nu::PointF(center_x + frontsonar_space/2, center_y + height/2), model->m_sonar.right_rear/unit, pi/2 - sonar_angle_range/2, pi/2 + sonar_angle_range/2);
-
-  // left side sonar
-  drawSonarArc(painter, nu::PointF(center_x - width/2, center_y - sidesonar_space/2), model->m_sonar.leftside_front/unit, pi - sonar_angle_range/2, pi + sonar_angle_range/2);
-  drawSonarArc(painter, nu::PointF(center_x - width/2, center_y + sidesonar_space/2), model->m_sonar.leftside_rear/unit, pi - sonar_angle_range/2, pi + sonar_angle_range/2);
-
-  // right side sonar
-  drawSonarArc(painter, nu::PointF(center_x + width/2, center_y - sidesonar_space/2), model->m_sonar.rightside_front/unit, 2*pi - sonar_angle_range/2, sonar_angle_range/2);
-  drawSonarArc(painter, nu::PointF(center_x + width/2, center_y + sidesonar_space/2), model->m_sonar.rightside_rear/unit, 2*pi - sonar_angle_range/2, sonar_angle_range/2);
+  // right sonar
+  drawSonarArc(painter, nu::PointF(center_x + width/2, center_y), model->m_sonar.right/unit, 2*pi - sonar_angle_range/2, sonar_angle_range/2);
 }
 
 void updateRadarDetectedObjects(nu::Painter *painter, TestModel *model)
@@ -241,15 +185,6 @@ void updateRadarDetectedObjects(nu::Painter *painter, TestModel *model)
      drawRadarObstacle(painter, pt, 5);
   }
 }
-void updateLogContent(nu::Label *label, std::string text)
-{
-  static std::string total_text;
-
-  total_text += "\n";
-  total_text += text;
-
-  label->SetText(total_text);
-}
 
 #if defined(OS_WIN)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -273,84 +208,22 @@ int main(int argc, const char *argv[]) {
   // Create window with default options, and then show it.
   scoped_refptr<nu::Window> window(new nu::Window(nu::Window::Options()));
 
-  scoped_refptr<nu::Canvas> canvas(new nu::Canvas(nu::SizeF(400, 400), 1.0f));
-  // nu::Painter *painter = canvas.get()->GetPainter();
-
-
   model.dataHB.subscribe([&](auto hb){
-    // updateSonarArc(canvas.get()->GetPainter(), amp);
-
     window->GetContentView()->Layout();
     window->GetContentView()->SchedulePaint();
   }); 
-//*/
 
-  scoped_refptr<nu::Container> mainView(new nu::Container); 
+  scoped_refptr<nu::Container> radar_view(new nu::Container);
+  radar_view->SetStyle("position", "absolute", "width", radar_view_size, "height", radar_view_size, "top", 0, "right", 0);
 
-  scoped_refptr<nu::Container> toolbar(new nu::Container); 
-  toolbar->SetBackgroundColor(nu::Color("#9FA2A2")); 
-  toolbar->SetStyle("position", "absolute", "width", tool_bar_width, "height", radar_view_size, "top", 0, "left", 0);
-
-  for (int i = 0; i < 3; ++i)
-  {
-    scoped_refptr<nu::Button> btn(new nu::Button("button " + std::to_string(i), nu::Button::Type::Normal));
-    // btn->SetStyle("flexgrow", 1);
-    toolbar->AddChildView(btn.get());
-  }
-
-  for (int i = 0; i < 3; ++i)
-  {
-    scoped_refptr<nu::Button> btn(new nu::Button("checkbox " + std::to_string(i), nu::Button::Type::Checkbox));
-    // btn->SetStyle("flexgrow", 1);
-    toolbar->AddChildView(btn.get());
-  }
-
-  for (int i = 0; i < 3; ++i)
-  {
-    scoped_refptr<nu::Button> btn(new nu::Button("radio " + std::to_string(i), nu::Button::Type::Radio));
-    // btn->SetStyle("flexgrow", 1);
-    toolbar->AddChildView(btn.get());
-  }
-
-  mainView->AddChildView(toolbar.get());
-
-  int scroll_size = log_view_height;
-  scoped_refptr<nu::Scroll> logView(new nu::Scroll); 
-  logView->SetBackgroundColor(nu::Color("#70DABB"));
-  logView->SetStyle("position", "absolute", "width", window_width, "height", window_height - radar_view_size, "bottom", 0, "left", 0);
-  logView->SetScrollbarPolicy(nu::Scroll::Policy::Always, nu::Scroll::Policy::Always);
-  scoped_refptr<nu::Label> logLabel = new nu::Label("This is log area!");
-  logLabel->SetStyle("position", "absolute", "height", 10000);
-  logLabel->SetBackgroundColor(nu::Color("#70DABB"));
-  logView->SetContentView(logLabel.get());
-  logView->SetContentSize(nu::SizeF(window_width, scroll_size));
-  mainView->AddChildView(logView.get());
-
-  scoped_refptr<nu::Container> radarView(new nu::Container);
-  radarView->SetStyle("position", "absolute", "width", radar_view_size, "height", radar_view_size, "top", 0, "right", 0);
-  mainView->AddChildView(radarView.get());
-
-
-  radarView->on_draw.Connect([&](nu::Container* self, nu::Painter* painter, const nu::RectF& dirty){
-    std::cout << "container on_draw on rect: " << radarView->GetBounds().ToString() << std::endl;
-    // std::cout << "container on_draw on rect: " << (self == nullptr) << std::endl;
-    scoped_refptr<nu::Canvas> temp_canvas(new nu::Canvas(nu::SizeF(radar_view_size, radar_view_size), 1.0f));
-    drawCar(temp_canvas.get()->GetPainter());
-    drawRadarRange(temp_canvas.get()->GetPainter());
-    updateSonarArc(temp_canvas.get()->GetPainter(), &model);  
-    updateRadarDetectedObjects(temp_canvas.get()->GetPainter(), &model);
-
-    nu::RectF bounds = radarView->GetBounds();
-    painter->DrawCanvas(temp_canvas.get(), nu::RectF(0, 0, bounds.width(), bounds.height()));
-
-    updateLogContent(logLabel.get(), "dirty area: " + dirty.ToString());
-    logView->SetContentSize(nu::SizeF(window_width, ++scroll_size));
-    // painter->DrawCanvas(canvas.get(), dirty);
+  radar_view->on_draw.Connect([&](nu::Container* self, nu::Painter* painter, const nu::RectF& dirty){
+    drawCar(painter);
+    updateSonarArc(painter, &model);  
+    updateRadarDetectedObjects(painter, &model);
   });
-
   
   window->SetResizable(false);
-  window->SetContentView(mainView.get());
+  window->SetContentView(radar_view.get());
   window->SetContentSize(nu::SizeF(window_width, window_height));
   window->Center();
   window->Activate();

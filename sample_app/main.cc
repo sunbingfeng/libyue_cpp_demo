@@ -16,10 +16,7 @@
 #include <observable/observable.hpp>
 
 struct ObjectInfo_77{
-    int8_t ID;
     float Range;
-    float RadialVelocity;
-    float Amplitude;
     float Azimuth;
 };
 
@@ -32,17 +29,14 @@ struct SonarData
 
 const static float pi = 3.1415926;
 static const float window_width = 600;
-static const float window_height = 700;
+static const float window_height = 600;
 static const float unit = 2;  // xx cm equals 1 pixel
 
-
-static const float tool_bar_width = 100;
-static const float radar_view_size = 500;
-static const float log_view_height = window_height - radar_view_size;
+static const float radar_view_size = window_width;
 
 static const float width = 102 / unit; // 102 cm
 static const float height = 175 / unit; // 175cm
-static const float center_x = radar_view_size / 2, center_y = radar_view_size / 2;
+static const float center_x = window_width / 2, center_y = window_height / 2;
 static const float sonar_angle_range = pi/3;
 
 
@@ -86,7 +80,7 @@ private:
       {
           float Range = 0.1f * (std::rand() % 2000);  // cm
           float Azimuth = ((std::rand() % 180) - 90) * pi / 180;        
-          front.push_back(ObjectInfo_77({0,Range,0.0f,0,Azimuth}));
+          front.push_back(ObjectInfo_77({Range,Azimuth}));
       }
       m_objs_map[0] = front;
 
@@ -95,7 +89,7 @@ private:
       {
           float Range = 0.1f * (std::rand() % 2000);  // cm
           float Azimuth = ((std::rand() % 180) - 90) * pi / 180;        
-          rear.push_back(ObjectInfo_77({0,Range,0.0f,0,Azimuth}));
+          rear.push_back(ObjectInfo_77({Range,Azimuth}));
       }
       m_objs_map[1] = rear;
       
@@ -115,6 +109,8 @@ private:
 
 void drawSonarArc(nu::Painter *painter, nu::PointF center, float radius, float sa, float ea)
 {
+  painter->Save();
+
   painter->SetStrokeColor(nu::Color("#2029E9"));
 
   painter->BeginPath();
@@ -123,10 +119,14 @@ void drawSonarArc(nu::Painter *painter, nu::PointF center, float radius, float s
   painter->Arc(center, radius, sa, ea);
   painter->ClosePath();
   painter->Stroke();
+
+  painter->Restore();
 }
 
 void drawRadarObstacle(nu::Painter *painter, nu::PointF center, float radius)
 {
+  painter->Save();
+
   painter->SetStrokeColor(nu::Color("#550000")); //"#550000"
   painter->SetFillColor(nu::Color("#DD0000"));  //"#DD0000"
 
@@ -135,16 +135,22 @@ void drawRadarObstacle(nu::Painter *painter, nu::PointF center, float radius)
   painter->ClosePath();
 
   painter->Fill();
+
+  painter->Restore();
 }
 
 
 void drawCar(nu::Painter *painter)
 {
+  painter->Save();
+
   painter->SetStrokeColor(nu::Color("#000000"));
   nu::RectF bounds = nu::RectF(-width/2, -height/2, width, height);
   bounds.Offset(center_x, center_y);
    
   painter->StrokeRect(bounds);
+
+  painter->Restore();
 }
 
 
@@ -169,7 +175,7 @@ void updateRadarDetectedObjects(nu::Painter *painter, TestModel *model)
     float r = (*itr).Range/unit;
     float thelta = (*itr).Azimuth;
 
-    pts.push_back(nu::PointF(center_x + r * std::sin(thelta), center_y - height/2 + r * std::cos(thelta)));     
+    pts.push_back(nu::PointF(center_x + r * std::sin(thelta), center_y - height/2 - r * std::cos(thelta)));     
   }
 
   for (std::vector<ObjectInfo_77>::iterator itr = model->m_objs_map[1].begin(); itr != model->m_objs_map[1].end(); ++itr)
@@ -214,7 +220,7 @@ int main(int argc, const char *argv[]) {
   }); 
 
   scoped_refptr<nu::Container> radar_view(new nu::Container);
-  radar_view->SetStyle("position", "absolute", "width", radar_view_size, "height", radar_view_size, "top", 0, "right", 0);
+  radar_view->SetStyle("position", "absolute", "width", window_width, "height", window_height, "top", 0, "right", 0);
 
   radar_view->on_draw.Connect([&](nu::Container* self, nu::Painter* painter, const nu::RectF& dirty){
     drawCar(painter);

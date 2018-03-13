@@ -1,3 +1,0 @@
-/home/bill/Documents/libyue/build/CMakeFiles/rebuild_cache.dir
-/home/bill/Documents/libyue/build/CMakeFiles/edit_cache.dir
-/home/bill/Documents/libyue/build/CMakeFiles/sample_app.dir
